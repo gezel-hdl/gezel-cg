@@ -1,0 +1,267 @@
+
+// Stand-alone AES block
+// Copyright 2003 Patrick Schaumont (schaum@ee.ucla.edu)
+// $Id: aes_l2.fdl,v 1.1 2005/07/18 17:22:18 schaum Exp $
+
+ipblock sbox_us00(
+ in din : ns(8);
+ out dout : ns(8))  {
+  iptype "sbox_us00";
+}
+
+ipblock sbox_us01 : sbox_us00   
+ipblock sbox_us02 : sbox_us00   
+ipblock sbox_us03 : sbox_us00   
+ipblock sbox_us10 : sbox_us00   
+ipblock sbox_us11 : sbox_us00   
+ipblock sbox_us12 : sbox_us00   
+ipblock sbox_us13 : sbox_us00   
+ipblock sbox_us20 : sbox_us00   
+ipblock sbox_us21 : sbox_us00   
+ipblock sbox_us22 : sbox_us00   
+ipblock sbox_us23 : sbox_us00   
+ipblock sbox_us30 : sbox_us00   
+ipblock sbox_us31 : sbox_us00   
+ipblock sbox_us32 : sbox_us00   
+ipblock sbox_us33 : sbox_us00   
+
+ipblock sbox_u0   : sbox_us00  
+ipblock sbox_u1   : sbox_us00  
+ipblock sbox_u2   : sbox_us00  
+ipblock sbox_u3   : sbox_us00  
+
+ipblock aes_key_expand_128(
+ in kld : ns(1);
+ in key : ns(128);
+ out wo_0 : ns(32);
+ out wo_1 : ns(32);
+ out wo_2 : ns(32);
+ out wo_3 : ns(32))  {
+  iptype "aes_key_expand_128";
+  ipparm "regOut=2";
+  ipparm "regOut=3";
+  ipparm "regOut=4";
+  ipparm "regOut=5";
+}
+
+ipblock aes_mix_col_0(
+ in s0 : ns(8);
+ in s1 : ns(8);
+ in s2 : ns(8);
+ in s3 : ns(8);
+ out s0_o : ns(8);
+ out s1_o : ns(8);
+ out s2_o : ns(8);
+ out s3_o : ns(8))  {
+  iptype "aes_mix_col_0";
+}
+
+ipblock aes_mix_col_1 : aes_mix_col_0    
+ipblock aes_mix_col_2 : aes_mix_col_0    
+ipblock aes_mix_col_3 : aes_mix_col_0    
+
+dp aes_top(in  rstaes      :   ns(1);
+           in  ld       :   ns(1); 
+           out done     :   ns(1); 
+           in  key      : ns(128);
+           in  text_in  : ns(128);
+           out text_out : ns(128)) {
+
+  sig ld_, done_  : ns(1);
+  sig key_, text_out_ : ns(128);
+  sig w0, w1, w2, w3 : ns(32);
+  reg text_in_r  : ns(128);
+  reg text_out_r : ns(128);
+  reg ld_r : ns(1);
+  reg sa00, sa01, sa02, sa03 : ns(8);
+  reg sa10, sa11, sa12, sa13 : ns(8);
+  reg sa20, sa21, sa22, sa23 : ns(8);
+  reg sa30, sa31, sa32, sa33 : ns(8);
+  sig sa00_next, sa01_next, sa02_next, sa03_next : ns(8);
+  sig sa10_next, sa11_next, sa12_next, sa13_next : ns(8);
+  sig sa20_next, sa21_next, sa22_next, sa23_next : ns(8);
+  sig sa30_next, sa31_next, sa32_next, sa33_next : ns(8);
+  sig sa00_sub, sa01_sub, sa02_sub, sa03_sub : ns(8);
+  sig sa10_sub, sa11_sub, sa12_sub, sa13_sub : ns(8);
+  sig sa20_sub, sa21_sub, sa22_sub, sa23_sub : ns(8);
+  sig sa30_sub, sa31_sub, sa32_sub, sa33_sub : ns(8);
+  sig sa00_sr, sa01_sr, sa02_sr, sa03_sr : ns(8);
+  sig sa10_sr, sa11_sr, sa12_sr, sa13_sr : ns(8);
+  sig sa20_sr, sa21_sr, sa22_sr, sa23_sr : ns(8);
+  sig sa30_sr, sa31_sr, sa32_sr, sa33_sr : ns(8);
+  sig sa00_mc, sa01_mc, sa02_mc, sa03_mc : ns(8);
+  sig sa10_mc, sa11_mc, sa12_mc, sa13_mc : ns(8);
+  sig sa20_mc, sa21_mc, sa22_mc, sa23_mc : ns(8);
+  sig sa30_mc, sa31_mc, sa32_mc, sa33_mc : ns(8);
+  sig text_out00, text_out01, text_out02, text_out03 : ns(8);
+  sig text_out04, text_out05, text_out06, text_out07 : ns(8);
+  sig text_out08, text_out09, text_out10, text_out11 : ns(8);
+  sig text_out12, text_out13, text_out14, text_out15 : ns(8);
+
+  reg dcnt : ns(4);
+
+  use aes_mix_col_0(sa00_sr,sa10_sr,sa20_sr,sa30_sr,sa00_mc,sa10_mc,sa20_mc,sa30_mc);
+  use aes_mix_col_1(sa01_sr,sa11_sr,sa21_sr,sa31_sr,sa01_mc,sa11_mc,sa21_mc,sa31_mc);
+  use aes_mix_col_2(sa02_sr,sa12_sr,sa22_sr,sa32_sr,sa02_mc,sa12_mc,sa22_mc,sa32_mc);
+  use aes_mix_col_3(sa03_sr,sa13_sr,sa23_sr,sa33_sr,sa03_mc,sa13_mc,sa23_mc,sa33_mc);
+
+  use sbox_us00(sa00,sa00_sub);
+  use sbox_us01(sa01,sa01_sub);
+  use sbox_us02(sa02,sa02_sub);
+  use sbox_us03(sa03,sa03_sub);
+  use sbox_us10(sa10,sa10_sub);
+  use sbox_us11(sa11,sa11_sub);
+  use sbox_us12(sa12,sa12_sub);
+  use sbox_us13(sa13,sa13_sub);
+  use sbox_us20(sa20,sa20_sub);
+  use sbox_us21(sa21,sa21_sub);
+  use sbox_us22(sa22,sa22_sub);
+  use sbox_us23(sa23,sa23_sub);
+  use sbox_us30(sa30,sa30_sub);
+  use sbox_us31(sa31,sa31_sub);
+  use sbox_us32(sa32,sa32_sub);
+  use sbox_us33(sa33,sa33_sub);
+
+  use aes_key_expand_128(ld_, key_, w0, w1, w2, w3);
+
+  always {
+
+     ld_ = ld;
+     key_ = key;
+
+     // control
+     dcnt = rstaes ? 0 : (ld ? 11 : (dcnt ? dcnt - 1 : dcnt));   
+     done_ = ~(dcnt[3] | dcnt[2] | dcnt[1]) & dcnt[0] & ~ld;
+     text_in_r = ld ? text_in : text_in_r;
+     ld_r = ld;
+
+     // addroundkey
+     sa33 = ld_r ? text_in[  7:  0] ^ w3[ 7: 0] : sa33_next;
+     sa23 = ld_r ? text_in[ 15:  8] ^ w3[15: 8] : sa23_next;
+     sa13 = ld_r ? text_in[ 23: 16] ^ w3[23:16] : sa13_next;
+     sa03 = ld_r ? text_in[ 31: 24] ^ w3[31:24] : sa03_next;
+     sa32 = ld_r ? text_in[ 39: 32] ^ w2[ 7: 0] : sa32_next;
+     sa22 = ld_r ? text_in[ 47: 40] ^ w2[15: 8] : sa22_next;
+     sa12 = ld_r ? text_in[ 55: 48] ^ w2[23:16] : sa12_next;
+     sa02 = ld_r ? text_in[ 63: 56] ^ w2[31:24] : sa02_next;
+     sa31 = ld_r ? text_in[ 71: 64] ^ w1[ 7: 0] : sa31_next;
+     sa21 = ld_r ? text_in[ 79: 72] ^ w1[15: 8] : sa21_next;
+     sa11 = ld_r ? text_in[ 87: 80] ^ w1[23:16] : sa11_next;
+     sa01 = ld_r ? text_in[ 95: 88] ^ w1[31:24] : sa01_next;
+     sa30 = ld_r ? text_in[103:096] ^ w0[ 7: 0] : sa30_next;
+     sa20 = ld_r ? text_in[111:104] ^ w0[15: 8] : sa20_next;
+     sa10 = ld_r ? text_in[119:112] ^ w0[23:16] : sa10_next;
+     sa00 = ld_r ? text_in[127:120] ^ w0[31:24] : sa00_next;
+	      
+     // round permutations
+     sa00_sr = sa00_sub;
+     sa01_sr = sa01_sub;
+     sa02_sr = sa02_sub;
+     sa03_sr = sa03_sub;
+     sa10_sr = sa11_sub;
+     sa11_sr = sa12_sub;
+     sa12_sr = sa13_sub;
+     sa13_sr = sa10_sub;
+     sa20_sr = sa22_sub;
+     sa21_sr = sa23_sub;
+     sa22_sr = sa20_sub;
+     sa23_sr = sa21_sub;
+     sa30_sr = sa33_sub;
+     sa31_sr = sa30_sub;
+     sa32_sr = sa31_sub;
+     sa33_sr = sa32_sub;
+
+     // add roundkey
+     sa00_next = sa00_mc ^ w0[31:24];
+     sa01_next = sa01_mc ^ w1[31:24];
+     sa02_next = sa02_mc ^ w2[31:24];
+     sa03_next = sa03_mc ^ w3[31:24];
+     sa10_next = sa10_mc ^ w0[23:16];
+     sa11_next = sa11_mc ^ w1[23:16];
+     sa12_next = sa12_mc ^ w2[23:16];
+     sa13_next = sa13_mc ^ w3[23:16];
+     sa20_next = sa20_mc ^ w0[15: 8];
+     sa21_next = sa21_mc ^ w1[15: 8];
+     sa22_next = sa22_mc ^ w2[15: 8];
+     sa23_next = sa23_mc ^ w3[15: 8];
+     sa30_next = sa30_mc ^ w0[ 7: 0];
+     sa31_next = sa31_mc ^ w1[ 7: 0];
+     sa32_next = sa32_mc ^ w2[ 7: 0];
+     sa33_next = sa33_mc ^ w3[ 7: 0];
+
+     // final text output
+     text_out00 = sa00_sr ^ w0[31:24];
+     text_out01 = sa01_sr ^ w1[31:24];
+     text_out02 = sa02_sr ^ w2[31:24];
+     text_out03 = sa03_sr ^ w3[31:24];
+     text_out04 = sa10_sr ^ w0[23:16];
+     text_out05 = sa11_sr ^ w1[23:16];
+     text_out06 = sa12_sr ^ w2[23:16];
+     text_out07 = sa13_sr ^ w3[23:16];
+     text_out08 = sa20_sr ^ w0[15: 8];
+     text_out09 = sa21_sr ^ w1[15: 8];
+     text_out10 = sa22_sr ^ w2[15: 8];
+     text_out11 = sa23_sr ^ w3[15: 8];
+     text_out12 = sa30_sr ^ w0[ 7: 0];
+     text_out13 = sa31_sr ^ w1[ 7: 0];
+     text_out14 = sa32_sr ^ w2[ 7: 0];
+     text_out15 = sa33_sr ^ w3[ 7: 0];
+
+     text_out_ = (text_out00 << 120) |
+		(text_out01 <<  88) |
+		(text_out02 <<  56) |
+		(text_out03 <<  24) |
+		(text_out04 << 112) |
+		(text_out05 <<  80) |
+		(text_out06 <<  48) |
+		(text_out07 <<  16) |
+		(text_out08 << 104) |
+		(text_out09 <<  72) |
+		(text_out10 <<  40) |
+		(text_out11 <<   8) |
+		(text_out12 <<  96) |
+		(text_out13 <<  64) |
+		(text_out14 <<  32) |
+		(text_out15 <<   0);
+    done = done_;
+    text_out = text_out_;
+    $display(done_, " ", text_out_);
+  }
+
+}
+
+
+dp testbench(out rstaes : ns(1);   out ld      : ns(1);   in done     : ns(1);
+	     out key  : ns(128); out text_in : ns(128); in text_out : ns(128)) {
+   reg ddone : ns(1);
+   reg dtext_out : ns(128);
+   sfg reset_1 { rstaes     = 1; }
+   sfg reset_0 { rstaes     = 0; }
+   sfg ld_1    { ld      = 1; }
+   sfg ld_0    { ld      = 0; }
+   sfg readout { key     = 0x000102030405060708090a0b0c0d0e0f;
+		 text_in = 0x00112233445566778899aabbccddeeff;
+	 	 ddone   = done;
+		 dtext_out = text_out;
+               }
+}
+
+fsm ftestbench(testbench) {
+  initial s0;
+  state   s1, s2;
+  @s0 (reset_1, ld_0, readout) -> s1;
+  @s1 (reset_0, ld_1, readout) -> s2;
+  @s2 if (ddone) then (reset_0, ld_1, readout) -> s2;
+                 else (reset_0, ld_0, readout) -> s2;
+}
+
+dp aes_sys {
+  sig rstaes, ld, done       : ns(1);
+  sig key, text_in, text_out : ns(218);
+  use testbench(rstaes, ld, done, key, text_in, text_out);
+  use aes_top  (rstaes, ld, done, key, text_in, text_out);
+}
+
+system S {
+  aes_sys;
+}

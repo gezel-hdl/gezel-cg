@@ -1,0 +1,40 @@
+
+// Stand-alone AES block
+// Copyright 2003 Patrick Schaumont (schaum@ee.ucla.edu)
+// $Id: aes_l3.fdl,v 1.1 2005/07/18 17:22:18 schaum Exp $
+
+ipblock aes_top(
+ in rstaes : ns(1);
+ in ld : ns(1);
+ out done : ns(1);
+ in key : ns(128);
+ in text_in : ns(128);
+ out text_out : ns(128))  {
+  iptype "aes_top";
+  ipparm "regOut=5";
+}
+
+ipblock testbench(
+ out rstaes : ns(1);
+ out ld : ns(1);
+ in done : ns(1);
+ out key : ns(128);
+ out text_in : ns(128);
+ in text_out : ns(128))  {
+  iptype "testbench";
+  ipparm "regOut=0";
+  ipparm "regOut=1";
+  ipparm "regOut=3";
+  ipparm "regOut=4";
+}
+
+dp aes_sys {
+  sig rstaes, ld, done       : ns(1);
+  sig key, text_in, text_out : ns(218);
+  use testbench(rstaes, ld, done, key, text_in, text_out);
+  use aes_top  (rstaes, ld, done, key, text_in, text_out);
+}
+
+system S {
+  aes_sys;
+}

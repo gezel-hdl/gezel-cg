@@ -1,0 +1,34 @@
+ipblock euclid(
+ in m_in : ns(32);
+ in n_in : ns(32);
+ out gcd_out : ns(32);
+ in c_ld : ns(1);
+ out c_done : ns(1))  {
+  iptype "euclid";
+  ipparm "regOut=2";
+  ipparm "regOut=4";
+}
+
+ipblock drive_euclid(
+ out m_in : ns(32);
+ out n_in : ns(32);
+ in gcd_out : ns(32);
+ out c_ld : ns(1);
+ in c_done : ns(1))  {
+  iptype "drive_euclid";
+  ipparm "regOut=0";
+  ipparm "regOut=1";
+  ipparm "regOut=3";
+}
+
+dp syseuclid {
+  sig m_in, n_in, gcd_out : ns(32);
+  sig c_ld, c_done : ns(1);
+  use euclid(m_in, n_in, gcd_out, c_ld, c_done);
+  use drive_euclid(m_in, n_in, gcd_out, c_ld, c_done);
+}
+
+system S {
+  syseuclid;
+}
+

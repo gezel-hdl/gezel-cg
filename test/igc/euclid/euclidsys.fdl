@@ -1,0 +1,79 @@
+dp euclid(in  m_in, n_in : ns(32);
+          out gcd_out    : ns(32);
+          in  c_ld       : ns(1);
+          out c_done     : ns(1)) {
+
+  reg m, n               : ns(32);
+  reg factor             : ns(32);
+  reg ld                 : ns(1);
+  reg done               : ns(1);
+
+  sfg load    { ld = c_ld; m = m_in; n = n_in; }
+  sfg init    { factor = 0; done = 0;}
+  sfg flags   { done = ((m == 0) | (n == 0));  }
+  sfg shiftm  { m = m >> 1; }
+  sfg shiftn  { n = n >> 1; }
+  sfg reduce  { m = (m >= n) ? m - n : m;  
+                n = (n >  m) ? n - m : n; }
+  sfg shiftf  { factor = factor + 1; } 
+  sfg outidle { gcd_out = 0;
+                c_done  = 0;}
+  sfg complete{ gcd_out = ((m > n) ? m : n) << factor;
+                c_done  = 1; }
+}
+
+fsm euclid_ctl(euclid) {
+  initial s0;
+  state s1, s2;
+
+  @s0 if (ld) then (outidle) -> s1;
+       else (init, load, outidle) -> s0;
+  @s1  if (done)               then (complete)                 -> s2;
+       else if ( m[0] &  n[0]) then (reduce, outidle, flags)   -> s1;
+       else if ( m[0] & ~n[0]) then (shiftn, outidle, flags)   -> s1;
+       else if (~m[0] &  n[0]) then (shiftm, outidle, flags)   -> s1;
+                               else (shiftn, shiftm, 
+                                     shiftf, outidle, flags)   -> s1;
+  @s2  if (ld) then (load, complete) -> s2;
+       else (init, load, outidle) -> s0;
+}
+
+dp drive_euclid(out  m_in, n_in : ns(32);
+                in   gcd_out    : ns(32);  
+                out  c_ld       : ns(1);
+                in   c_done     : ns(1)) {
+
+   reg done : ns(1);
+   reg m, n : ns(32);
+   reg gcd  : ns(32);
+
+   sfg grab { done = c_done; gcd  = gcd_out; }
+   sfg init { m = 12; n = 34; m_in = m; n_in = n; c_ld = 0; }
+   sfg load { m_in = m; n_in = n; c_ld = 1; }
+   sfg inc  { m = m + 2; n = n + 1; m_in = 0; n_in = 0; c_ld = 0; }
+   sfg wait { m_in = m; n_in = n; c_ld = 0; }
+   sfg show { $display($cycle, " GCD(", m, ", ", n, ")=", gcd); 
+            }
+}
+
+fsm hde(drive_euclid) {
+  initial s0;
+  state   s1, s2, s3;
+  @s0 (init, grab) -> s1;
+  @s1 (load, grab) -> s2;
+  @s2 if (done) then (wait, grab) -> s3;
+                else (wait, grab) -> s2;
+  @s3 (show, inc, grab) -> s1;
+}
+
+dp syseuclid {
+  sig m_in, n_in, gcd_out : ns(32);
+  sig c_ld, c_done : ns(1);
+  use euclid(m_in, n_in, gcd_out, c_ld, c_done);
+  use drive_euclid(m_in, n_in, gcd_out, c_ld, c_done);
+}
+
+system S {
+  syseuclid;
+}
+

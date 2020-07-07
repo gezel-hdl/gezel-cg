@@ -1,0 +1,20 @@
+// IP checksum inserter
+// Fully pipelined implementation
+//
+// data is expected to be available each clock cycle at data_in
+// the last byte of a packet is indicated through 'complete'
+//
+// data_out contains the processed data stream
+// rdy_out is '1' when data_out is valid
+//
+// Copyright 2003 Patrick Schaumont (schaum@ee.ucla.edu)
+// $Id: ipchecksum_l2.fdl,v 1.1 2005/07/18 17:22:21 schaum Exp $
+
+ipblock ipchecksum_sys {
+  iptype "ipchecksum_sys";
+}
+
+system S {
+  ipchecksum_sys;
+}
+

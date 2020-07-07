@@ -1,0 +1,49 @@
+// IP checksum inserter
+// Fully pipelined implementation
+//
+// data is expected to be available each clock cycle at data_in
+// the last byte of a packet is indicated through 'complete'
+//
+// data_out contains the processed data stream
+// rdy_out is '1' when data_out is valid
+//
+// Copyright 2003 Patrick Schaumont (schaum@ee.ucla.edu)
+// $Id: ipchecksum_l1.fdl,v 1.1 2005/07/18 17:22:21 schaum Exp $
+
+ipblock checksum(
+ in data_in : ns(8);
+ in complete : ns(1);
+ out data_out : ns(8);
+ out rdy_out : ns(1))  {
+  iptype "checksum";
+  ipparm "regOut=2";
+  ipparm "regOut=3";
+}
+
+
+//------------------------------------------------------------
+
+// sample testbench
+
+ipblock tb(
+ out data_in : ns(8);
+ out complete : ns(1))  {
+  iptype "tb";
+  ipparm "regOut=0";
+  ipparm "regOut=1";
+}
+
+dp ipchecksum_sys {
+  sig data_in  : ns(8);
+  sig complete : ns(1);
+  sig data_out : ns(8);
+  sig rdy_out  : ns(1);
+  use tb(data_in, complete);
+  use checksum(data_in, complete, data_out, rdy_out);
+  always { }
+}
+
+system S {
+  ipchecksum_sys;
+}
+

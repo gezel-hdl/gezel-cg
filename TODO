@@ -1,0 +1,212 @@
+
+December 15 2005:
+   - Nested '? :' don't work well
+
+####### ######  ####### #     #
+#     # #     # #       ##    #
+#     # #     # #       # #   #
+#     # ######  #####   #  #  #
+#     # #       #       #   # #
+#     # #       #       #    ##
+####### #       ####### #     #
+
+- May 11, 2005
+
+  (Feedback by S. Yang)
+FIX  - Check for reserved keywords in VHDL
+FIX  - xor of two constants generates extraneous ';' in VHDL
+       "0"; xor "1"
+
+  (Feedback by K. Sakiyama)
+  - Warnings of unused signals in VHDL code generation.
+FIX  - RST and CLK ports are connected in VHDL even for combinatorial blocks
+
+- May 2, 2005
+FIX  a/ Top-level datapath without controller generates incorrect VHDL
+     A hardwired controller is always needed
+FIX  b/ Instances of cloned datapaths with 'use' generate incorrect
+     component name
+
+- Following code generates a 'lookup table not found', should be a syntax
+  error.
+
+     c (v > 0 ? 3 : 2);  // forget '=' between c and (
+
+FIX - KNOWN BUG: Support multiple assignments in VHDL code generation
+  (pointed out by Guomundur Olafsson, DTU)
+
+  e.g. sfg run  {
+          a = b = c = 1;
+       }
+
+  segmentation-faults in fdlvhd
+
+FIX - KNOWN BUG: VHDL code generation for nested ifs in FSM generates
+  erroneous 'end-if'. 
+ 
+  Temporary workaround:
+  Convert deeply nested if to a simple chained if-then-else,
+  which works fine.
+
+FIX - KNOWN BUG: Cloned datapaths inside of a 'system' block get the wrong
+  component name.
+
+  Temporary workaround:
+  If you use cloned datapaths, include these hierarchically in a
+  single datapath ('dp' block). An example is shown in Listing 4 of
+  the User Manual.
+
+- VHDL code generator should check for:
+FIX   - use of keywords as variable names
+FIX   - variable names ending in '_'
+
+- VHDL code generator bug when a register is used as input of
+  a hierarchically included module
+
+-     use a(b);  // -> b cannot be a register
+
+- Use signals as state transition conditions provided that they are
+  produced by a default instruction.
+
+- User-defined signal evaluation:
+  <this is just a random tought to point out there is still chaos
+  lurking in the code> 
+
+  Right now, many simulation features are getting piggybacked 
+  on the RT-level signal objects. Example features are: trace, vcd
+  generation, toggle counting, etc..  Eventually, these features will
+  make the RT-level simulation objects very fat and slow. A better
+  structure would be to make each new feature live in a separate
+  code-generation tree, so that each of them can be turned on or of as
+  needed.
+
+               Simulation_tree
+                   +-- RT-level simulation
+                   +-- VCD profiling tree
+                   +-- Toggle counting
+                   +-- Tracing (VHDL testbench recording)
+
+- Type checking on interconnections
+
+ #####  #       #######  #####  ####### ######
+#     # #       #     # #     # #       #     #
+#       #       #     # #       #       #     #
+#       #       #     #  #####  #####   #     #
+#       #       #     #       # #       #     #
+#     # #       #     # #     # #       #     #
+ #####  ####### #######  #####  ####### ######
+
+- May 06, 2005
+  ipblock cannot be cloned using the clone operator
+  ** closed on JUNE06: can do this now. Problem was with using
+     clone ipblock inside of the USE statement
+
+  ipblock b1 ..
+  ipblock b2 : b1
+  =>
+  *** Error: Child Datapath unknown b1.b2 in sys
+
+- Default instructions for GEZEL
+
+- June 5, 2005
+
+  Completed support for always instructions
+
+  Removed limitation of June 1
+
+- June 1, 2005
+
+  Added support for 'always', default instructions
+
+  Principle: 'always' is an sfg that will be executed at each control step
+             can be written as 'always' or 'sfg always' (same effect)
+
+  Also included default controller generation:
+  When a dp misses a controller, will automatically add a hardwired
+  one, which executes 'always' (if it exists)
+
+  Current limitation: default controllers do not work for cloned dp
+  (because they are only generated when the parsing is complete,
+   and cloning is done during parsing AND requires the controllers to
+   be available)
+
+- May 17, 2005
+
+  PROBLEM  : the i8052 co-simulation ends without calling the
+             destructors of the created ip-blocks.
+  SOLUTION : add 'delete glbRTsimgen' command before exiting main()
+  FIXED    : 13-05-2005
+  FILE     : gezel51.cxx
+  LINES    : 85 - 93
+  AUTHORS  : Jarik Poplavski Kany (s010728@DTU), Ole Krarup (s040261@DTU)
+
+- May 17, 2005
+
+  PROBLEM  : the i8051 co-simulation will run infinitely with error
+             message "Error in hex file", if the IHX-file does not
+             exist. The simulation then can't be stopped by sending
+             CTRL-C signal.
+  SOLUTION : use 'if (!fs.good()) ...' instead of 'if (ifs.bad()) ..'
+  FIXED    : 13-05-2005
+  FILE     : i8051.cxx
+  LINES    : 3110 - 3114
+  AUTHORS  : Jarik Poplavski Kany (s010728@DTU), Ole Krarup (s040261@DTU)
+
+- In RAM ipblock, the use of blanks generates wrong size in VHDL
+   ipparm = "size = 128";  // does not work
+   ipparm = "size=128";    // works
+
+ Solution: Bug removed in GEZEL 1.7
+
+- Make the use of 'system' more consistent (suggested by Jorgen
+  Steensgaard-Madsen, DTU)
+  - declare wires
+  - include dp using 'use'
+   system S {
+     sig w1 : ns(5);
+     sig w2 : ns(20);
+     use fsmd1(w1, w2);
+     use fsmd2(w1);
+   }
+   etc..
+
+  Solution: 'system' will be phased out in favor of an alternative
+            writing style that achieves the same effect.
+            Examples in GEZEL 1.7 are updated to reflect this new design
+            style.
+
+     In summary, rather than writing:
+
+     system S {
+       testbench(rstaes, ld, done, key, text_in, text_out);
+       aes_top  (rstaes, ld, done, key, text_in, text_out);
+     }
+
+     it is suggested to write:
+ 
+     dp aes_system {
+       sig rstaes   : ns(1);
+       sig ld       : ns(1);
+       sig done     : ns(1);
+       sig key      : ns(128);
+       sig text_in  : ns(128);
+       sig text_out : ns(128);
+       use testbench(rstaes, ld, done, key, text_in, text_out);
+       use aes_top  (rstaes, ld, done, key, text_in, text_out);
+     }
+     system S {
+       aes_system;
+     }
+ 
+     Eventually, system will become obsolete as the top level module
+     may be found by means of a simple hierarchical sort.
+
+- Make cycle count an optional parameter (pointed out by Ole Krarup, DTU)
+
+  Solved in GEZEL 1.7: If cycle count parameter is missing, will run forever.
+
+
+
+
+
+

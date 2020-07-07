@@ -1,0 +1,147 @@
+Symbol Table holds 145 entries
+   Id           Type              Name   Context
+    0       datapath            euclid        -1
+    1        dpinput              m_in         0
+    2        dpinput              n_in         0
+    3        sigtype             (rep=ns,w=16)         1
+    4       dpoutput               gcd         0
+    5        sigtype             (rep=ns,w=16)         4
+    6            reg                 m         0
+    7            reg                 n         0
+    8        sigtype             (rep=ns,w=16)         6
+    9            reg              done         0
+   10        sigtype             (rep=ns,w=1)         9
+   11            reg            factor         0
+   12        sigtype             (rep=ns,w=16)        11
+   13            sfg              init         0
+   14      assign_op               (L=6, R=1)        13
+   15      assign_op               (L=7, R=2)        13
+   16       const_op                 0        13
+   17      assign_op               (L=11, R=16)        13
+   18       const_op                 0        13
+   19      assign_op               (L=9, R=18)        13
+   20       const_op                 0        13
+   21      assign_op               (L=4, R=20)        13
+   22        display            <void>        13
+   23        dispstr            cycle=        22
+   24  display_cycle            <void>        22
+   25        dispstr                m=        22
+   26        dispvar               (V=1)        22
+   27        dispstr                n=        22
+   28        dispvar               (V=2)        22
+   29            sfg            shiftm         0
+   30       const_op                 1        29
+   31         shl_op               (L=6, R=30)        29
+   32      assign_op               (L=6, R=31)        29
+   33            sfg            shiftn         0
+   34       const_op                 1        33
+   35         shl_op               (L=7, R=34)        33
+   36      assign_op               (L=7, R=35)        33
+   37            sfg            reduce         0
+   38       grteq_op               (L=6, R=7)        37
+   39         sub_op               (L=6, R=7)        37
+   40         sel_op               (L=38, M=39, R=6)        37
+   41      assign_op               (L=6, R=40)        37
+   42         grt_op               (L=7, R=6)        37
+   43         sub_op               (L=7, R=6)        37
+   44         sel_op               (L=42, M=43, R=7)        37
+   45      assign_op               (L=7, R=44)        37
+   46            sfg            shiftf         0
+   47       const_op                 1        46
+   48         add_op               (L=11, R=47)        46
+   49      assign_op               (L=11, R=48)        46
+   50            sfg           outidle         0
+   51       const_op                 0        50
+   52      assign_op               (L=4, R=51)        50
+   53       const_op                 0        50
+   54          eq_op               (L=6, R=53)        50
+   55       const_op                 0        50
+   56          eq_op               (L=7, R=55)        50
+   57         ior_op               (L=54, R=56)        50
+   58      assign_op               (L=9, R=57)        50
+   59            sfg          complete         0
+   60         grt_op               (L=6, R=7)        59
+   61         sel_op               (L=60, M=6, R=7)        59
+   62         shr_op               (L=61, R=11)        59
+   63      assign_op               (L=4, R=62)        59
+   64        display            <void>        59
+   65        dispstr            cycle=        64
+   66  display_cycle            <void>        64
+   67        dispstr              gcd=        64
+   68        dispvar               (V=4)        64
+   69        fsm_ctl                 (euclid_ctl, dp=0)        -1
+   70    fsm_initial                s0        69
+   71      fsm_state                s1        69
+   72      fsm_state                s2        69
+   73        ctlstep               (#=0, C=-1)        69
+   74       sfg_exec               (D=0,S=13)        73
+   75      fsm_trans                70->71        73
+   76       ctl_true               (V=9)        -1
+   77        ctlstep               (#=1, C=76)        69
+   78       sfg_exec               (D=0,S=59)        77
+   79      fsm_trans                71->72        77
+   80      ctl_false               (V=9)        -1
+   81          index                 [0] P=6         6
+   82          index                 [0] P=7         7
+   83         and_op               (L=81, R=82)        69
+   84       ctl_true               (V=83)        80
+   85        ctlstep               (#=2, C=84)        69
+   86       sfg_exec               (D=0,S=37)        85
+   87       sfg_exec               (D=0,S=50)        85
+   88      fsm_trans                71->71        85
+   89      ctl_false               (V=83)        80
+   90          index                 [0] P=6         6
+   91          index                 [0] P=7         7
+   92         not_op               (L=91)        69
+   93         and_op               (L=90, R=92)        69
+   94       ctl_true               (V=93)        89
+   95        ctlstep               (#=3, C=94)        69
+   96       sfg_exec               (D=0,S=33)        95
+   97       sfg_exec               (D=0,S=50)        95
+   98      fsm_trans                71->71        95
+   99      ctl_false               (V=93)        89
+  100          index                 [0] P=6         6
+  101         not_op               (L=100)        69
+  102          index                 [0] P=7         7
+  103         and_op               (L=101, R=102)        69
+  104       ctl_true               (V=103)        99
+  105        ctlstep               (#=4, C=104)        69
+  106       sfg_exec               (D=0,S=29)       105
+  107       sfg_exec               (D=0,S=50)       105
+  108      fsm_trans                71->71       105
+  109      ctl_false               (V=103)        99
+  110        ctlstep               (#=5, C=109)        69
+  111       sfg_exec               (D=0,S=33)       110
+  112       sfg_exec               (D=0,S=29)       110
+  113       sfg_exec               (D=0,S=46)       110
+  114       sfg_exec               (D=0,S=50)       110
+  115      fsm_trans                71->71       110
+  116        ctlstep               (#=6, C=-1)        69
+  117       sfg_exec               (D=0,S=50)       116
+  118      fsm_trans                72->72       116
+  119       datapath       test_euclid        -1
+  120       dpoutput                 m       119
+  121       dpoutput                 n       119
+  122        sigtype             (rep=ns,w=16)       120
+  123     sfg_always            always       119
+  124       const_op              2233       123
+  125      assign_op               (L=120, R=124)       123
+  126       const_op               654       123
+  127      assign_op               (L=121, R=126)       123
+  128      hwire_ctl                 (noname, dp=119)        -1
+  129       sfg_exec               (D=119,S=123)       116
+  130       datapath        euclid_sys        -1
+  131            sig                 m       130
+  132            sig                 n       130
+  133            sig               gcd       130
+  134        sigtype             (rep=ns,w=16)       131
+  135         dpc_dp               (V=0)       130
+  136        dpc_arg               (D=0, P=1)       131
+  137        dpc_arg               (D=0, P=2)       132
+  138        dpc_arg               (D=0, P=4)       133
+  139         dpc_dp               (V=119)       130
+  140        dpc_arg               (D=119, P=120)       131
+  141        dpc_arg               (D=119, P=121)       132
+  142      hwire_ctl                 (noname, dp=130)        -1
+  143         system                 S        -1
+  144          sysdp               (V=130)       143

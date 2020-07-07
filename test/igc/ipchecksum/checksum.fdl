@@ -1,0 +1,11 @@
+// Incremental GEZEL Compiler - Automatically generated ipblock file
+// GEZEL Source Module: checksum
+ipblock checksum(
+ in data_in : ns(8);
+ in complete : ns(1);
+ out data_out : ns(8);
+ out rdy_out : ns(1))  {
+  iptype "checksum";
+  ipparm "regOut=2";
+  ipparm "regOut=3";
+}

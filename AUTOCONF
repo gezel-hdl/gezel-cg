@@ -1,0 +1,2 @@
+./configure --prefix=/opt/gezel-2.0/ --with-gezel=/opt/gezel-2.0 --enable-vhdl --enable-igc
+./configure --enable-vhdl --with-gezel=/opt/gezel --prefix=/opt/gezel

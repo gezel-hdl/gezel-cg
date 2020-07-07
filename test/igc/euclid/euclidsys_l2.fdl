@@ -1,0 +1,8 @@
+ipblock syseuclid {
+  iptype "syseuclid";
+}
+
+system S {
+  syseuclid;
+}
+

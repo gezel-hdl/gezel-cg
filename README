@@ -1,0 +1,39 @@
+This is README for GEZEL 1.7
+$Id: README,v 1.1.1.1 2005/07/14 17:32:46 schaum Exp $
+
+Introduction
+------------
+
+GEZEL is a language and open environment for exploration, simulation,
+and implementation of cycle-true hardware models. The models can be
+simulated stand-alone, or cosimulated with one of the supported
+instruction set simulators. GEZEL models can be automatically
+translated into VHDL for hardware synthesis targeting FPGA or ASIC.
+
+The GEZEL core is a C++ library that can be easily integrated into
+other system simulation projects. This release includes the GEZEL
+library along with several tools:
+	- A VHDL Code generator for GEZEL programs
+	- A C++  Code generator for GEZEL programs
+
+
+Installation
+------------
+
+Please refer to Appendix A of the user manual.
+
+Contact Information
+-------------------
+
+We appreciate feedback, bug reports.  Contact: Patrick Schaumont
+(schaum@ee.ucla.edu)
+
+The GEZEL homepage is http://www.ee.ucla.edu/~schaum/gezel.  It
+contains additional examples, documentation and papers related to
+GEZEL.
+
+There is also an email list that will keep you up to do of new
+developments at http://groups.yahoo.com/group/gezel
+
+The freshmeat project page for gezel is at:
+http://freshmeat.net/projects/gezel/

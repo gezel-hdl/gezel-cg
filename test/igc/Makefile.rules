@@ -1,0 +1,19 @@
+BUILDIGC = ../../../build
+BUILD = ../../../../sim/build
+IGC = $(BUILDIGC)/bin/igc
+
+UNAME = $(shell /usr/bin/uname)
+
+ifneq (,$(findstring CYGWIN,$(UNAME)))
+define create_dynlib
+	$(IGC) $< $(subst lib,,$(basename $@))
+	g++ -O3 -I$(BUILD)/include/gezel -c $(subst lib,,$(basename $@)).cxx 
+	g++ -O3 -shared -Wl,--rpath -Wl,/home/schaum/gezel/devel/build/lib  $(subst lib,,$(basename $@)).o -L$(BUILD)/lib -lipconfig -lfdl -lgmp -o $@
+endef
+else
+define create_dynlib
+	$(IGC) $< $(subst lib,,$(basename $@))
+	g++ -fPIC -O3 -I$(BUILD)/include/gezel -c $(subst lib,,$(basename $@)).cxx 
+	g++ -shared -O3 -Wl,--rpath -Wl,/home/schaum/gezel/devel/build/lib  $(subst lib,,$(basename $@)).o $(BUILD)/lib/libipconfig.so $(BUILD)/lib/libfdl.so -lgmp -ldl -o $@
+endef
+endif
