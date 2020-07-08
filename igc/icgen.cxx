@@ -25,17 +25,9 @@
 #include "config.h"
 #endif
 
-#ifdef HAVE_SSTREAM
 #include <sstream>
 using std::string;
 using std::ostringstream;
-
-typedef ostringstream ostrstr_t;
-#else
-#include <strstream.h>
-
-typedef ostrstream ostrstr_t;
-#endif
 
 #include <stdlib.h>
 
@@ -51,7 +43,7 @@ static map<symid, string> symnames;
 
 const char *icgen::symname(symid j) {
   if (symnames.find(j) == symnames.end()) {
-    ostrstr_t strstrm;
+    ostringstream strstrm;
     strstrm << "op_" << j;
     symnames[j] = strstrm.str();
   }
@@ -66,7 +58,7 @@ static map<symid, string> lhsnames;
 
 const char *icgen::lhsname(symid j) {
   if (lhsnames.find(j) == lhsnames.end()) {
-    ostrstr_t strstrm;
+    ostringstream strstrm;
     if (symkind.find(j) != symkind.end()) {
       // is a terminal
       switch (symkind[j]) {
@@ -97,7 +89,7 @@ static map<symid, string> rhsnames;
 
 const char *icgen::rhsname(symid j) {
   if (rhsnames.find(j) == rhsnames.end()) {
-    ostrstr_t strstrm;
+    ostringstream strstrm;
     if (symkind.find(j) != symkind.end()) {
       // is a terminal
       switch (symkind[j]) {

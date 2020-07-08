@@ -62,14 +62,6 @@ CXXFLAGS="$CXXFLAGS $XCXXFLAGS"
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 
-dnl TODO: REMOVE THIS!
-# see if we can use ostringstream and sstream
-AC_LANG_CPLUSPLUS
-AC_TRY_COMPILE([#include <sstream>
-using std::ostringstream;
-],[ostringstream message; message << "Hello"; return 0;],
-AC_DEFINE(HAVE_SSTREAM,,[define if the compiler has stringstream]), )
-
 dnl Include checks for Simit-ARM (so that correct config.h is created)
 AC_CHECK_HEADERS(fcntl.h unistd.h sys/types.h sys/stat.h sys/time.h sys/times.h sys/resource.h stdint.h inttypes.h)
 AC_TYPE_UID_T

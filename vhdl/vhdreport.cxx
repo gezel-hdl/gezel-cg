@@ -25,17 +25,9 @@
 #include "config.h"
 #endif
 
-#ifdef HAVE_SSTREAM
 #include <sstream>
 using std::string;
 using std::ostringstream;
-
-typedef ostringstream ostrstr_t;
-#else
-#include <strstream.h>
-
-typedef ostrstream ostrstr_t;
-#endif
 
 //---------------------------------------------------------------------
 vhdreport::vhdreport(string filename) : os(filename.c_str()) {
@@ -83,21 +75,21 @@ void vhdreport::nextline(int line) {
 }
 
 void vhdreport::outregister(int size, int bit) {
-  ostrstr_t strstrm;
+  ostringstream strstrm;
   doindent();
   strstrm <<size<<" register of size "<<bit<<" bit "<<"\n";
   os <<strstrm.str();
 }
 
 void vhdreport::outlut(int size, int bit) {
-  ostrstr_t strstrm;
+  ostringstream strstrm;
   doindent();
   strstrm <<size<<" LUT of size "<<bit<<" bit "<<"\n";
   os <<strstrm.str();
 }
 
 void vhdreport::outop(int size, int bit, string nm) {
-  ostrstr_t strstrm;
+  ostringstream strstrm;
   doindent();
   strstrm <<size<<" "<<nm<<" operator of size "<<bit<<" bit"<<"\n";
   os <<strstrm.str();

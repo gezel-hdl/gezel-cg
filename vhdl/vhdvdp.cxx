@@ -326,13 +326,13 @@ int vhdvdp::getbitcount() {
 }
 
 string vhdvdp::vautoname() {
-  ostrstr_t strstrm;
+  ostringstream strstrm;
   strstrm << "sig_" <<count++;
   return strstrm.str();
 }
 
 string vhdvdp::vautoname(string base,int num) {
-  ostrstr_t out;
+  ostringstream out;
   out <<base<<"_"<<num;
   return out.str();
 }
@@ -475,8 +475,8 @@ void vhdvdp::dumpdp(string clkname, string rstname,int synclk,int resetval) {
   vector<symid> id;
   bool   first_fsm = true;
   bool   first_dp = true;
-  ostrstr_t strstrm_fsm;
-  ostrstr_t strstrm_dp;
+  ostringstream strstrm_fsm;
+  ostringstream strstrm_dp;
   int count;
   
   vhdout* vhdlout = new vhdout(filename);
@@ -1174,7 +1174,7 @@ void vhdvdp::debugreport(vhdreport* report){
   map<string,vhdebugop*> debugoplist;
   map<symid,vhdop*> tmplist;
   
-  //  ostrstr_t strstrm;
+  //  ostringstream strstrm;
   
   report->outputline("");
   report->outputline("datapath : "+getname());

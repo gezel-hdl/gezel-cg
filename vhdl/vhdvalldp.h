@@ -52,17 +52,9 @@ int vmax(int first, int second);
 #include "config.h"
 #endif
 
-#ifdef HAVE_SSTREAM
 #include <sstream>
 using std::string;
 using std::ostringstream;
-
-typedef ostringstream ostrstr_t;
-#else
-#include <strstream.h>
-
-typedef ostrstream ostrstr_t;
-#endif
 
 class vhdvalldp {
  public:

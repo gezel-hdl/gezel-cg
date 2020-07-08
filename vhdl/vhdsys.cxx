@@ -56,7 +56,7 @@ void vhdsys::addnet(symid in, symid out) {
 void vhdsys::resetcount() {  count = 0;  }
 
 string vhdsys::vautoname() {
-  ostrstr_t strstrm;
+  ostringstream strstrm;
   strstrm << "sig_" <<count++;
   return strstrm.str();
 }

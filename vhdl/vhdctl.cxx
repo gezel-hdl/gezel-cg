@@ -27,17 +27,9 @@
 #include "config.h"
 #endif
 
-#ifdef HAVE_SSTREAM
 #include <sstream>
 using std::string;
 using std::ostringstream;
-
-typedef ostringstream ostrstr_t;
-#else
-#include <strstream.h>
-
-typedef ostrstream ostrstr_t;
-#endif
 
 //--------------------------------------------------------------
 vhdstepcond::vhdstepcond(vhdvar* _cond,string _condtype) : cond(_cond), condtype(_condtype) {}
@@ -516,7 +508,7 @@ void  vhdfsm::vhdoutcmdsel(vhdout* os) {
 void vhdfsm::debugreportstate(vhdreport* report) {
   int statecount = 0;
   int transcount = 0;
-  ostrstr_t strstrm;
+  ostringstream strstrm;
 
   for (map<symid, vhdstate *>::iterator i = statelist.begin(); i != statelist.end(); ++i) 
       if ((i->second)) 	

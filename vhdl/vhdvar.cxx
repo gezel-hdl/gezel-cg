@@ -25,17 +25,9 @@
 #include "config.h"
 #endif
 
-#ifdef HAVE_SSTREAM
 #include <sstream>
 using std::string;
 using std::ostringstream;
-
-typedef ostringstream ostrstr_t;
-#else
-#include <strstream.h>
-
-typedef ostrstream ostrstr_t;
-#endif
 
 //--------------------------------------------------------------
 
@@ -177,7 +169,7 @@ string vhdvar::getportname() {
 }
 
 string vhdvar::getregname() {
-  ostrstr_t ostrm;
+  ostringstream ostrm;
   if(isindex()) {
     if (wl > 1) {
       ostrm<<basevar->getname() + "_wire";

@@ -290,13 +290,13 @@ int vhdclonedp::getbitcount() {
 }
 
 string vhdclonedp::vautoname() {
-  ostrstr_t strstrm;
+  ostringstream strstrm;
   strstrm << "sig_" <<count++;
   return strstrm.str();
 }
 
 string vhdclonedp::vautoname(string base,int num) {
-    ostrstr_t out;
+    ostringstream out;
     out <<base<<"_"<<num;
     return out.str();
 }

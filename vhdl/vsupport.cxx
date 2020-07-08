@@ -28,17 +28,9 @@
 #include "config.h"
 #endif
 
-#ifdef HAVE_SSTREAM
 #include <sstream>
 using std::string;
 using std::ostringstream;
-
-typedef ostringstream ostrstr_t;
-#else
-#include <strstream.h>
-
-typedef ostrstream ostrstr_t;
-#endif
 
 #include <stdlib.h>
 
@@ -65,7 +57,7 @@ string vhextostring(char* value){
     return "\'" + n + "\'";
 }
 
-  //    ostrstr_t out;
+  //    ostringstream out;
   //    out<<'"';
   //    //convert from hex to binary stream   
   //    for(unsigned int i=2;i<strlen(value);i++) {
@@ -105,7 +97,7 @@ string vbintostring(char* value){
     return "\'" + n + "\'";
 }
 
-//    ostrstr_t out;
+//    ostringstream out;
 //    if (strlen(value) > 3) 
 //      out<<'"';   
 //    else
@@ -120,7 +112,7 @@ string vbintostring(char* value){
 //}
 
 string vintostring(int num){
-    ostrstr_t out;
+    ostringstream out;
     out<<num;
     return out.str();
 }

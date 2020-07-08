@@ -510,7 +510,7 @@ void vgen::cgassign     (symid v, symid sfg, symid lhs, symid rhs) {
 }
 
 void vgen::cgindex      (symid v, symid basevar, int idx, int len) {
-  ostrstr_t name;
+  ostringstream name;
   name << dplist[cur_dp]->getvarport(basevar)->getname();
   if (len > 1)
     name << "(" << (idx+len-1) << " downto " << idx << ")";
