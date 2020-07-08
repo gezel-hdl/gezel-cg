@@ -24,18 +24,6 @@ AX_ARG_DISABLE(verilog,
 AM_CONDITIONAL([BUILDVERILOG], [test "$enable_verilog" = yes])
 
 dnl ----------------------------------------------
-dnl TODO: REMOVE THIS!
-AC_ARG_ENABLE(buildeval,
-    AS_HELP_STRING([--enable-eval], [build evaluation version [default=no]]))
-
-evaldefine=
-if test "$enable_eval" = yes; then
-  evaldefine=-DENABLEEVAL;
-fi;
-
-CPPFLAGS="$CPPFLAGS $evaldefine";
-
-dnl ----------------------------------------------
 AX_ARG_DISABLE(igc,
     AS_HELP_STRING([--disable-igc], [build incremental GEZEL compiler]))
 

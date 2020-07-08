@@ -200,21 +200,8 @@ void vgen::cgdpc_ipblock(symid v, symid parentdp) {
   dplist[parentdp]->adddp(v,dplist[v]);
 }
 
-#ifdef ENABLEEVAL
-static unsigned glbevalcount = 0;
-#endif
-
 // DATAPATH
 void vgen::cgdp         (symid v, char *name) {
-
-#ifdef ENABLEEVAL
-  glbevalcount++;
-  if (glbevalcount >3) {
-    cerr << "*** This evaluation version of fdlvhd is limited to 3 FSMD\n"; 
-    cerr << "*** Contact Patrick Schaumont (schaum@vt.edu) for access to full version\n";
-    exit(0); 
-  }  
-#endif
 
   vhdvalldp* t = new vhdvdp (name, vhdvdp::dp);
   dplist[v] = t;

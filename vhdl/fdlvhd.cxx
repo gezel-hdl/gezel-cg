@@ -35,9 +35,6 @@ using namespace std;
 void usage(char *p) {
   cout << "fdlvhd - GEZEL to VHDL conversion tool\n";
   cout << "(c) 2006 Schaumont, Ching. All Rights Reserved\n";
-#ifdef ENABLEEVAL
-  cout << "** This evaluation version is limited to 3 FSMD\n";
-#endif
   cout << "Usage: " << p << " [-d] [-s] [-i] [-c clock reset] [<filename>]\n";
   cout << "  -d          debug report in report.txt\n";
   cout << "  -i          specify active-low reset \n";
